@@ -5,3 +5,8 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class MedicGoRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AdministratorQualifier
+

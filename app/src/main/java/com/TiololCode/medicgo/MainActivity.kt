@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.compose.AppTheme
-import com.TiololCode.medicgo.features.login.presentation.screens.LoginScreen
+import com.TiololCode.medicgo.features.admistrator.presentation.screens.administrator.AdministratorScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,14 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                LoginScreen(
-                    onNavigateToRegister = {
-                        // TODO: navegar a pantalla de registro
-                    },
-                    onLoginSuccess = {
-                        // TODO: navegar a pantalla principal
-                    }
-                )
+                AdministratorScreen()
             }
         }
     }
