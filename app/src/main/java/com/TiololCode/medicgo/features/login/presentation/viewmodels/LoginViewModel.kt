@@ -2,6 +2,7 @@ package com.TiololCode.medicgo.features.login.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.TiololCode.medicgo.core.security.TokenManager
 import com.TiololCode.medicgo.features.login.domain.entities.LoginResult
 import com.TiololCode.medicgo.features.login.domain.usescases.PostLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ data class LoginUiState(
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val postLoginUseCase: PostLoginUseCase
+    private val postLoginUseCase: PostLoginUseCase,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -43,6 +45,10 @@ class LoginViewModel @Inject constructor(
             val result = postLoginUseCase(state.licenseNumber, state.password)
             result.fold(
                 onSuccess = { loginResult ->
+                    tokenManager.saveToken(loginResult.token)
+                    loginResult.user?.let {
+                        tokenManager.saveUserData(it.id, it.name, it.email)
+                    }
                     _uiState.update { it.copy(isLoading = false, loginResult = loginResult) }
                 },
                 onFailure = { error ->
@@ -60,3 +66,4 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(loginResult = null) }
     }
 }
+
