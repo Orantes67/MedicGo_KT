@@ -2,6 +2,7 @@ package com.TiololCode.medicgo.features.register.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -60,6 +61,7 @@ private val RegisterButtonTextColor = Color(0xFF4888AD)
 fun RegisterScreen(
     onNavigateBack: () -> Unit = {},
     onRegisterSuccess: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {},
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -273,7 +275,9 @@ fun RegisterScreen(
                                 append("Log In")
                             }
                         },
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .clickable { onNavigateToLogin() }
                     )
                 }
             }
