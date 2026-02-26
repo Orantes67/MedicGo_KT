@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.secrets.gradle)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -75,4 +76,5 @@ dependencies {
     implementation(libs.hilt.android)                               // Implementación de Hilt
     ksp(libs.hilt.compiler)                                         // Procesador de anotaciones KSP
     implementation(libs.hilt.navigation.compose)                    // Integración con Jetpack Compose
+    implementation(libs.kotlinx.serialization.json)                 // Serialización para rutas de navegación type-safe
 }

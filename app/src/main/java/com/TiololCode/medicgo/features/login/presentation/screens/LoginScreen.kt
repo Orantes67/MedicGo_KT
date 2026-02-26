@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.TiololCode.medicgo.R
 import com.TiololCode.medicgo.features.login.presentation.components.LicenseInputField
 import com.TiololCode.medicgo.features.login.presentation.components.PasswordInputField
+import androidx.compose.foundation.layout.safeDrawingPadding
 import com.TiololCode.medicgo.features.login.presentation.viewmodels.LoginViewModel
 
 private val ScreenBackground = Color(0xFF407899)
@@ -65,6 +66,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .safeDrawingPadding()
             .background(ScreenBackground),
         contentAlignment = Alignment.Center
     ) {
@@ -90,8 +92,8 @@ fun LoginScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(R.mipmap.ic_launcher_round),
-                        contentDescription = "MedicGo Logo",
+                        painter = painterResource(R.drawable.brain),
+                        contentDescription = "Brain Logo",
                         modifier = Modifier.size(90.dp),
                         contentScale = ContentScale.Crop
                     )
