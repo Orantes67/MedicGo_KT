@@ -1,41 +1,33 @@
 package com.TiololCode.medicgo.features.doctor.presentation.screens.patients
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorPatient
+import com.TiololCode.medicgo.features.doctor.domain.entities.PatientNote
 import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.PatientDetailUiState
 import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.PatientDetailViewModel
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.data.samplePatientCritical
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.data.samplePatientObservation
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.data.samplePatientStable
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.data.samplePatientNotes
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sections.PatientDetailHeader
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sections.PatientBasicInfo
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sections.NurseAssignmentSection
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sections.PatientNotesSection
+import com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sections.StateUpdateSection
 
-private val PrimaryText = Color(0xFF1A1A2E)
-private val SecondaryText = Color(0xFF888888)
-private val HeaderBackground = Color(0xFF1A1A2E)
-private val HeaderText = Color(0xFFFFFFFF)
-private val PrimaryColor = Color(0xFF42A5F5)
-private val CardBackground = Color(0xFFFFFFFF)
+private val ScreenBackground = Color(0xFFF5F7FA)
 
 @Composable
 fun PatientDetailContent(
@@ -44,271 +36,123 @@ fun PatientDetailContent(
     viewModel: PatientDetailViewModel,
     onBackClick: () -> Unit
 ) {
+    PatientDetailContentStateless(
+        patient = patient,
+        notes = uiState.patientNotes,
+        newNoteContent = uiState.newNoteContent,
+        newPatientState = uiState.newPatientState,
+        onNoteContentChange = { viewModel.updateNoteContent(it) },
+        onAddNoteClick = { viewModel.setAddingNoteState(!uiState.isAddingNote) },
+        onStateChange = { viewModel.updatePatientState(it) },
+        onUpdateClick = { viewModel.setUpdatingStateStatus(!uiState.isUpdatingState) },
+        onBackClick = onBackClick
+    )
+}
+
+@Composable
+private fun PatientDetailContentStateless(
+    patient: DoctorPatient,
+    notes: List<PatientNote>,
+    newNoteContent: String,
+    newPatientState: String,
+    onNoteContentChange: (String) -> Unit,
+    onAddNoteClick: () -> Unit,
+    onStateChange: (String) -> Unit,
+    onUpdateClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
+            .background(ScreenBackground),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        item { PatientDetailHeader(onBackClick = onBackClick) }
+        item { PatientBasicInfo(patient = patient) }
+        item { NurseAssignmentSection(patient = patient) }
         item {
-            PatientDetailHeader(onBackClick = onBackClick)
-        }
-
-        item {
-            PatientBasicInfo(patient = patient)
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            NurseAssignmentSection(patient = patient)
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
             PatientNotesSection(
-                notes = uiState.patientNotes,
-                newNoteContent = uiState.newNoteContent,
-                onNoteContentChange = { viewModel.updateNoteContent(it) },
-                onAddNoteClick = { viewModel.setAddingNoteState(!uiState.isAddingNote) }
+                notes = notes,
+                newNoteContent = newNoteContent,
+                onNoteContentChange = onNoteContentChange,
+                onAddNoteClick = onAddNoteClick
             )
         }
-
         item {
-            Spacer(modifier = Modifier.height(16.dp))
             StateUpdateSection(
                 currentState = patient.currentState,
-                newState = uiState.newPatientState,
-                onStateChange = { viewModel.updatePatientState(it) },
-                onUpdateClick = { viewModel.setUpdatingStateStatus(!uiState.isUpdatingState) }
+                newState = newPatientState,
+                onStateChange = onStateChange,
+                onUpdateClick = onUpdateClick
             )
         }
-
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+        item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true, name = "Paciente Crítico")
 @Composable
-private fun PatientDetailHeader(onBackClick: () -> Unit) {
+private fun PreviewPatientDetailCritical() {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = HeaderBackground)
-            .padding(16.dp)
+            .fillMaxSize()
+            .background(ScreenBackground)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        color = PrimaryColor,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .clickable { onBackClick() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = HeaderText,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "Detalles del Paciente",
-                fontSize = 18.sp,
-                color = HeaderText,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
-    }
-}
-
-@Composable
-private fun PatientBasicInfo(patient: DoctorPatient) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = CardBackground)
-            .padding(16.dp)
-    ) {
-        Column {
-            InfoRow(label = "Nombre", value = "${patient.name} ${patient.lastName}")
-            InfoRow(label = "Edad", value = "${patient.age} años")
-            InfoRow(label = "Tipo de Sangre", value = patient.bloodType)
-            InfoRow(label = "Área", value = patient.areaName)
-            InfoRow(label = "Estado Actual", value = patient.currentState)
-            InfoRow(label = "Síntomas", value = patient.symptoms)
-            InfoRow(label = "Fecha de Registro", value = patient.registrationDate)
-        }
-    }
-}
-
-@Composable
-private fun InfoRow(label: String, value: String) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = SecondaryText,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            fontSize = 14.sp,
-            color = PrimaryText,
-            fontWeight = FontWeight.Normal
+        PatientDetailContentStateless(
+            patient = samplePatientCritical,
+            notes = samplePatientNotes,
+            newNoteContent = "",
+            newPatientState = "",
+            onNoteContentChange = {},
+            onAddNoteClick = {},
+            onStateChange = {},
+            onUpdateClick = {},
+            onBackClick = {}
         )
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true, name = "Paciente Observación")
 @Composable
-private fun NurseAssignmentSection(patient: DoctorPatient) {
+private fun PreviewPatientDetailObservation() {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = CardBackground)
-            .padding(16.dp)
+            .fillMaxSize()
+            .background(ScreenBackground)
     ) {
-        Column {
-            Text(
-                text = "Enfermera Asignada",
-                fontSize = 14.sp,
-                color = PrimaryText,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = patient.assignedNurseName,
-                fontSize = 14.sp,
-                color = PrimaryColor,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+        PatientDetailContentStateless(
+            patient = samplePatientObservation,
+            notes = emptyList(),
+            newNoteContent = "Revisar temperatura cada 2 horas",
+            newPatientState = "",
+            onNoteContentChange = {},
+            onAddNoteClick = {},
+            onStateChange = {},
+            onUpdateClick = {},
+            onBackClick = {}
+        )
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true, name = "Paciente Estable")
 @Composable
-private fun PatientNotesSection(
-    notes: List<com.TiololCode.medicgo.features.doctor.domain.entities.PatientNote>,
-    newNoteContent: String,
-    onNoteContentChange: (String) -> Unit,
-    onAddNoteClick: () -> Unit
-) {
+private fun PreviewPatientDetailStable() {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = CardBackground)
-            .padding(16.dp)
+            .fillMaxSize()
+            .background(ScreenBackground)
     ) {
-        Column {
-            Text(
-                text = "Notas del Paciente",
-                fontSize = 14.sp,
-                color = PrimaryText,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            notes.forEach { note ->
-                NoteItem(note = note)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = newNoteContent,
-                onValueChange = onNoteContentChange,
-                label = { Text("Agregar nueva nota") },
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 3
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = onAddNoteClick,
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Agregar Nota")
-            }
-        }
-    }
-}
-
-@Composable
-private fun NoteItem(note: com.TiololCode.medicgo.features.doctor.domain.entities.PatientNote) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = Color(0xFFEEEEEE),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(8.dp)
-    ) {
-        Column {
-            Text(
-                text = note.content,
-                fontSize = 12.sp,
-                color = PrimaryText
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = note.createdDate,
-                fontSize = 10.sp,
-                color = SecondaryText
-            )
-        }
-    }
-}
-
-@Composable
-private fun StateUpdateSection(
-    currentState: String,
-    newState: String,
-    onStateChange: (String) -> Unit,
-    onUpdateClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = CardBackground)
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = "Actualizar Estado del Paciente",
-                fontSize = 14.sp,
-                color = PrimaryText,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Estado Actual: $currentState",
-                fontSize = 12.sp,
-                color = SecondaryText
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = newState,
-                onValueChange = onStateChange,
-                label = { Text("Nuevo estado") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = onUpdateClick,
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Actualizar Estado")
-            }
-        }
+        PatientDetailContentStateless(
+            patient = samplePatientStable,
+            notes = samplePatientNotes,
+            newNoteContent = "",
+            newPatientState = "Dado de alta",
+            onNoteContentChange = {},
+            onAddNoteClick = {},
+            onStateChange = {},
+            onUpdateClick = {},
+            onBackClick = {}
+        )
     }
 }
 
