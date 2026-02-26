@@ -45,7 +45,10 @@ private val TabActiveBackground = Color(0xFF1A1A2E)
 private val TabInactiveBackground = Color.Transparent
 
 @Composable
-fun AdministratorScreen(viewModel: AdministratorViewModel = hiltViewModel()) {
+fun AdministratorScreen(
+    viewModel: AdministratorViewModel = hiltViewModel(),
+    onLogout: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
@@ -53,7 +56,10 @@ fun AdministratorScreen(viewModel: AdministratorViewModel = hiltViewModel()) {
             .fillMaxSize()
             .background(ScreenBackground)
     ) {
-        AdministratorHeader()
+        AdministratorHeader(
+            onLogout = { viewModel.onLogout(onLogout) },
+            isLoggingOut = uiState.isLoggingOut
+        )
         AdministratorTabBar(
             selectedTab = uiState.selectedTab,
             onTabSelected = { viewModel.onTabSelected(it) }
@@ -68,8 +74,12 @@ fun AdministratorScreen(viewModel: AdministratorViewModel = hiltViewModel()) {
     }
 }
 
+
 @Composable
-fun AdministratorHeader() {
+fun AdministratorHeader(
+    onLogout: () -> Unit = {},
+    isLoggingOut: Boolean = false
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,7 +92,7 @@ fun AdministratorHeader() {
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFF0F0F0))
-                .clickable { },
+                .clickable(enabled = !isLoggingOut) { onLogout() },
             contentAlignment = Alignment.Center
         ) {
             Icon(

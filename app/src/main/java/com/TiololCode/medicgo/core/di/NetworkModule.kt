@@ -1,6 +1,8 @@
 package com.TiololCode.medicgo.core.di
 
 import com.TiololCode.medicgo.BuildConfig
+import com.TiololCode.medicgo.core.network.AuthInterceptor
+import com.TiololCode.medicgo.core.security.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,12 +19,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(authInterceptor)
             .build()
     }
 
@@ -37,3 +42,4 @@ object NetworkModule {
             .build()
     }
 }
+
