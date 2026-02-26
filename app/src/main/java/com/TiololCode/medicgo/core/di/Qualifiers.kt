@@ -8,9 +8,12 @@ annotation class MedicGoRetrofit
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class RegisterQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class AdministratorQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RegisterQualifier
-
+annotation class DoctorQualifier
