@@ -43,9 +43,11 @@ data class AreaDistributionDto(
 )
 
 data class AreaResponseDto(
-    @SerializedName("id") val id: String?,
-    @SerializedName("name") val name: String?,
-    @SerializedName("total_patients") val totalPatients: Int?
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("area") val name: String?,
+    @SerializedName("total") val totalPatients: Int?,
+    @SerializedName("criticos") val criticos: Int? = 0,
+    @SerializedName("estables") val estables: Int? = 0
 )
 
 data class CreateProfessionalRequestDto(

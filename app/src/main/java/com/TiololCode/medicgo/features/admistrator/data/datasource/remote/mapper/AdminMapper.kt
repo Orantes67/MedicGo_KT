@@ -47,7 +47,9 @@ fun AreaResponseDto.toArea(): Area {
     return Area(
         id = id.orEmpty(),
         name = name.orEmpty(),
-        patientCount = totalPatients ?: 0
+        patientCount = totalPatients ?: 0,
+        criticos = criticos ?: 0,
+        estables = estables ?: 0
     )
 }
 
