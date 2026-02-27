@@ -97,20 +97,36 @@ class EnfermeroViewModel @Inject constructor(
         val newState = currentState.selectedState
         val nota = currentState.notaRapida
 
+        // Guardar estado anterior para rollback
+        val previousState = currentState.patients
+            .firstOrNull { it.id == patientId }
+            ?.currentState ?: return
+
         viewModelScope.launch {
-            _uiState.update { it.copy(isUpdating = true) }
+            // Actualización optimista: refleja el cambio en la UI antes de esperar al servidor
+            _uiState.update { s ->
+                s.copy(
+                    isUpdating = true,
+                    patients = s.patients.map { p ->
+                        if (p.id == patientId) p.copy(currentState = newState) else p
+                    }
+                )
+            }
 
             updatePacienteEstadoUseCase(patientId, newState).fold(
                 onSuccess = {
-                    // Optimistic local update
-                    _uiState.update { s -> s.copy(
-                        patients = s.patients.map { p ->
-                            if (p.id == patientId) p.copy(currentState = newState) else p
-                        }
-                    ) }
                     _events.emit(EnfermeroEvent.EstadoActualizado)
                 },
                 onFailure = { e ->
+                    // Rollback: revertir al estado anterior si el servidor rechaza el cambio
+                    _uiState.update { s ->
+                        s.copy(
+                            patients = s.patients.map { p ->
+                                if (p.id == patientId) p.copy(currentState = previousState) else p
+                            },
+                            selectedState = previousState
+                        )
+                    }
                     _events.emit(EnfermeroEvent.Error(e.message ?: "Error al actualizar estado"))
                 }
             )
