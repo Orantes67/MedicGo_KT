@@ -37,14 +37,14 @@ private val PlaceholderColor = Color(0xFFADB5BD)
 private val LabelColor = Color(0xFF374151)
 
 @Composable
-fun EmailInputField(
+fun LicenseInputField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = "Email",
+            text = "Medical License Number",
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
             color = LabelColor
@@ -56,7 +56,7 @@ fun EmailInputField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
-                    text = "Enter your email",
+                    text = "Enter your license number",
                     color = PlaceholderColor,
                     fontSize = 14.sp
                 )
@@ -64,11 +64,11 @@ fun EmailInputField(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = "Email",
+                    contentDescription = "License",
                     tint = PlaceholderColor
                 )
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(

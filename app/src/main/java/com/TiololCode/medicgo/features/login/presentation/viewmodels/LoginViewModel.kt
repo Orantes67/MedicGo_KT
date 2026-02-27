@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class LoginUiState(
-    val email: String = "",
+    val licenseNumber: String = "",
     val password: String = "",
     val isLoading: Boolean = false,
     val loginResult: LoginResult? = null,
@@ -30,8 +30,8 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun onEmailChange(value: String) {
-        _uiState.update { it.copy(email = value, error = null) }
+    fun onLicenseNumberChange(value: String) {
+        _uiState.update { it.copy(licenseNumber = value, error = null) }
     }
 
     fun onPasswordChange(value: String) {
@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
         val state = _uiState.value
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            val result = postLoginUseCase(state.email, state.password)
+            val result = postLoginUseCase(state.licenseNumber, state.password)
             result.fold(
                 onSuccess = { loginResult ->
                     tokenManager.saveToken(loginResult.token)

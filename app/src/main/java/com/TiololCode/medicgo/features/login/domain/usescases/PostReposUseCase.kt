@@ -8,17 +8,17 @@ class PostLoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository
 ) {
     suspend operator fun invoke(
-        email: String,
+        licenseNumber: String,
         password: String
     ): Result<LoginResult> {
         return try {
-            if (email.isBlank()) {
-                return Result.failure(Exception("El email no puede estar vacío"))
+            if (licenseNumber.isBlank()) {
+                return Result.failure(Exception("El número de colegiado no puede estar vacío"))
             }
             if (password.isBlank()) {
                 return Result.failure(Exception("La contraseña no puede estar vacía"))
             }
-            loginRepository.login(email.trim(), password)
+            loginRepository.login(licenseNumber.trim(), password)
         } catch (e: Exception) {
             android.util.Log.e("PostLoginUseCase", "Error en login: ${e.message}", e)
             Result.failure(e)

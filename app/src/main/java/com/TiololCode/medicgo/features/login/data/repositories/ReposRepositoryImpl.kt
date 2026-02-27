@@ -12,9 +12,9 @@ class LoginRepositoryImpl @Inject constructor(
     private val loginApi: LoginApi
 ) : LoginRepository {
 
-    override suspend fun login(email: String, password: String): Result<LoginResult> {
+    override suspend fun login(licenseNumber: String, password: String): Result<LoginResult> {
         return try {
-            val response = loginApi.login(LoginRequest(email, password))
+            val response = loginApi.login(LoginRequest(licenseNumber, password))
             val domain = response.toDomain()
             if (domain.token.isBlank()) {
                 Result.failure(Exception(domain.message.ifBlank { "Credenciales inválidas" }))
@@ -22,11 +22,12 @@ class LoginRepositoryImpl @Inject constructor(
                 Result.success(domain)
             }
         } catch (e: HttpException) {
+            val errorBody = try { e.response()?.errorBody()?.string() } catch (_: Exception) { null }
             val message = when (e.code()) {
                 401 -> "Email o contraseña incorrectos"
-                400 -> "Datos inválidos"
+                400 -> "Error 400: ${errorBody ?: "Datos inválidos"}"
                 500 -> "Error en el servidor. Intenta más tarde"
-                else -> "Error al iniciar sesión (${e.code()})"
+                else -> "Error ${e.code()}: ${errorBody ?: "desconocido"}"
             }
             Result.failure(Exception(message))
         } catch (e: Exception) {
