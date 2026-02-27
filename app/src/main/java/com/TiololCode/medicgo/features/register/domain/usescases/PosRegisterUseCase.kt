@@ -12,7 +12,8 @@ class PosRegisterUseCase @Inject constructor(
         licenseNumber: String,
         specialty: String,
         email: String,
-        password: String
+        password: String,
+        role: String
     ): Result<RegisterResult> {
         return try {
             if (name.isBlank()) {
@@ -30,12 +31,16 @@ class PosRegisterUseCase @Inject constructor(
             if (password.length < 8) {
                 return Result.failure(Exception("La contraseña debe tener al menos 8 caracteres"))
             }
+            if (role.isBlank()) {
+                return Result.failure(Exception("Debe seleccionar un rol"))
+            }
             registerRepository.register(
                 name = name.trim(),
                 licenseNumber = licenseNumber.trim(),
                 specialty = specialty.trim(),
                 email = email.trim(),
-                password = password
+                password = password,
+                role = role.trim()
             )
         } catch (e: Exception) {
             android.util.Log.e("PosRegisterUseCase", "Error en registro: ${e.message}", e)

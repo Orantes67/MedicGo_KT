@@ -13,7 +13,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
+     @Inject
     lateinit var registrars: Set<@JvmSuppressWildcards RouteRegistrar>
 
     override fun onCreate(savedInstanceState: Bundle?) {
