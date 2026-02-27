@@ -24,14 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorPatient
+import com.TiololCode.medicgo.features.doctor.domain.entities.PatientDetail
 
 private val PrimaryText = Color(0xFF1A1A2E)
 private val SubtitleText = Color(0xFF888888)
 private val CardBackground = Color.White
 
 @Composable
-fun NurseAssignmentSection(patient: DoctorPatient) {
+fun NurseAssignmentSection(detail: PatientDetail) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +59,7 @@ fun NurseAssignmentSection(patient: DoctorPatient) {
         Column {
             Text(text = "Enfermera Asignada", fontSize = 12.sp, color = SubtitleText)
             Text(
-                text = patient.assignedNurseName,
+                text = detail.assignedNurse,
                 fontSize = 15.sp,
                 color = PrimaryText,
                 fontWeight = FontWeight.SemiBold

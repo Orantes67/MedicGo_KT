@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorPatient
+import com.TiololCode.medicgo.features.doctor.domain.entities.PatientDetail
 
 private val PrimaryText = Color(0xFF1A1A2E)
 private val SubtitleText = Color(0xFF888888)
@@ -36,7 +36,7 @@ private val CardBackground = Color.White
 private val ScreenBackground = Color(0xFFF5F7FA)
 
 @Composable
-fun PatientBasicInfo(patient: DoctorPatient) {
+fun PatientBasicInfo(detail: PatientDetail) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,16 +45,16 @@ fun PatientBasicInfo(patient: DoctorPatient) {
             .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
-        PatientNameRow(patient = patient)
+        PatientNameRow(detail = detail)
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider(color = Color(0xFFF0F0F0))
         Spacer(modifier = Modifier.height(12.dp))
-        PatientInfoChips(patient = patient)
+        PatientInfoChips(detail = detail)
     }
 }
 
 @Composable
-private fun PatientNameRow(patient: DoctorPatient) {
+private fun PatientNameRow(detail: PatientDetail) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier = Modifier
@@ -73,13 +73,13 @@ private fun PatientNameRow(patient: DoctorPatient) {
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
-                text = "${patient.name} ${patient.lastName}",
+                text = detail.fullName,
                 fontSize = 16.sp,
                 color = PrimaryText,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = patient.areaName,
+                text = detail.area,
                 fontSize = 13.sp,
                 color = SubtitleText
             )
@@ -88,18 +88,17 @@ private fun PatientNameRow(patient: DoctorPatient) {
 }
 
 @Composable
-private fun PatientInfoChips(patient: DoctorPatient) {
+private fun PatientInfoChips(detail: PatientDetail) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        InfoChip(label = "Edad", value = "${patient.age} años", modifier = Modifier.weight(1f))
-        InfoChip(label = "Tipo de Sangre", value = patient.bloodType, modifier = Modifier.weight(1f))
+        InfoChip(label = "Edad", value = "${detail.age} años", modifier = Modifier.weight(1f))
+        InfoChip(label = "Área", value = detail.area, modifier = Modifier.weight(1f))
     }
     Spacer(modifier = Modifier.height(10.dp))
-    InfoRow(label = "Estado Actual", value = patient.currentState, valueColor = stateColor(patient.currentState))
-    InfoRow(label = "Síntomas", value = patient.symptoms)
-    InfoRow(label = "Fecha de Registro", value = patient.registrationDate)
+    InfoRow(label = "Estado Actual", value = detail.currentState, valueColor = stateColor(detail.currentState))
+    InfoRow(label = "Última Actualización", value = detail.lastUpdate)
 }
 
 @Composable

@@ -1,18 +1,13 @@
 package com.TiololCode.medicgo.features.doctor.domain.usescases
 
-import com.TiololCode.medicgo.features.doctor.domain.entities.PatientNote
-import com.TiololCode.medicgo.features.doctor.domain.repositories.PatientRepository
+import com.TiololCode.medicgo.features.doctor.domain.entities.PatientDetail
+import com.TiololCode.medicgo.features.doctor.domain.repositories.DoctorRepository
 import javax.inject.Inject
 
-class GetPatientNotesUseCase @Inject constructor(
-    private val patientRepository: PatientRepository
+class GetPatientDetailUseCase @Inject constructor(
+    private val doctorRepository: DoctorRepository
 ) {
-    suspend operator fun invoke(patientId: Long): Result<List<PatientNote>> {
-        return try {
-            patientRepository.getPatientNotes(patientId)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    suspend operator fun invoke(patientId: Long): Result<PatientDetail> =
+        doctorRepository.getPatientDetail(patientId)
 }
 

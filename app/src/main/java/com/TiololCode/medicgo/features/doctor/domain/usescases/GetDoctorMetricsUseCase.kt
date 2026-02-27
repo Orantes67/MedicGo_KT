@@ -7,12 +7,7 @@ import javax.inject.Inject
 class GetDoctorMetricsUseCase @Inject constructor(
     private val doctorRepository: DoctorRepository
 ) {
-    suspend operator fun invoke(doctorId: Long): Result<DoctorMetric> {
-        return try {
-            doctorRepository.getDoctorMetrics(doctorId)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    suspend operator fun invoke(): Result<DoctorMetric> =
+        doctorRepository.getMyPatients().map { it.metrics }
 }
 

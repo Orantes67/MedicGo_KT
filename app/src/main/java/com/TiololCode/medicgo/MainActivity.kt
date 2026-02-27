@@ -5,12 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.compose.AppTheme
-<<<<<<< navigation
 import com.TiololCode.medicgo.core.navigation.NavigationWrapper
 import com.TiololCode.medicgo.core.navigation.RouteRegistrar
-=======
-import com.TiololCode.medicgo.features.doctor.presentation.screens.doctor.DoctorScreen
->>>>>>> develop
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,16 +21,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-<<<<<<< navigation
                 NavigationWrapper(registrars = registrars)
-=======
-                DoctorScreen(
-                    onLogout = {
-                        // Aquí irá la lógica de logout
-                    }
-                )
->>>>>>> develop
             }
         }
     }
 }
+

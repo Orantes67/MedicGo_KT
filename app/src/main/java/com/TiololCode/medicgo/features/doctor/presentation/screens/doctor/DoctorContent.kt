@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.DoctorViewModel
 import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.DoctorUiState
 import com.TiololCode.medicgo.features.doctor.presentation.screens.doctor.sections.MetricsSection
 import com.TiololCode.medicgo.features.doctor.presentation.screens.doctor.sections.CriticalAlertsSection
@@ -29,7 +28,7 @@ private val PrimaryText = Color(0xFF1A1A2E)
 @Composable
 fun DoctorContent(
     uiState: DoctorUiState,
-    viewModel: DoctorViewModel
+    onPatientClick: (Long) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -60,7 +59,7 @@ fun DoctorContent(
         items(uiState.patients.size) { index ->
             PatientCard(
                 patient = uiState.patients[index],
-                onClick = { viewModel.selectPatient(it) }
+                onClick = { onPatientClick(it.id) }
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -78,7 +77,7 @@ private fun PatientListHeader(patientCount: Int) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Lista de Pacientes",
+            text = "Mis pacientes asignados",
             fontSize = 16.sp,
             color = PrimaryText,
             fontWeight = FontWeight.Bold

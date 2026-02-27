@@ -48,6 +48,7 @@ class LoginViewModel @Inject constructor(
                     tokenManager.saveToken(loginResult.token)
                     loginResult.user?.let {
                         tokenManager.saveUserData(it.id, it.name, it.email)
+                        tokenManager.saveUserRole(it.role)
                     }
                     _uiState.update { it.copy(isLoading = false, loginResult = loginResult) }
                 },

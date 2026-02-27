@@ -4,7 +4,8 @@ data class User(
     val id: Long,
     val name: String,
     val email: String,
-    val licenseNumber: String
+    val licenseNumber: String,
+    val role: String
 )
 
 data class LoginResult(
