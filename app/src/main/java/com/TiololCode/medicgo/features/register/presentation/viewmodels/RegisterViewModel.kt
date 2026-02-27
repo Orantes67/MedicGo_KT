@@ -18,7 +18,9 @@ data class RegisterUiState(
     val specialty: String = "",
     val email: String = "",
     val password: String = "",
+    val role: String = "",
     val specialtyExpanded: Boolean = false,
+    val roleExpanded: Boolean = false,
     val isLoading: Boolean = false,
     val registerResult: RegisterResult? = null,
     val error: String? = null
@@ -56,6 +58,14 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(password = value, error = null) }
     }
 
+    fun onRoleChange(value: String) {
+        _uiState.update { it.copy(role = value, roleExpanded = false, error = null) }
+    }
+
+    fun onRoleExpandedChange(expanded: Boolean) {
+        _uiState.update { it.copy(roleExpanded = expanded) }
+    }
+
     fun onRegister() {
         val state = _uiState.value
         viewModelScope.launch {
@@ -65,7 +75,8 @@ class RegisterViewModel @Inject constructor(
                 licenseNumber = state.licenseNumber,
                 specialty = state.specialty,
                 email = state.email,
-                password = state.password
+                password = state.password,
+                role = state.role
             )
             result.fold(
                 onSuccess = { registerResult ->

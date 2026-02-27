@@ -7,7 +7,8 @@ data class RegisterRequestDto(
     @SerializedName("license_number") val licenseNumber: String,
     @SerializedName("specialty") val specialty: String,
     @SerializedName("email") val email: String,
-    @SerializedName("password") val password: String
+    @SerializedName("password") val password: String,
+    @SerializedName("role") val role: String
 )
 
 data class RegisteredUserDto(

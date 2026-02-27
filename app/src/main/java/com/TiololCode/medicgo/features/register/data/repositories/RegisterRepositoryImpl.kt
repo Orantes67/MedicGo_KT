@@ -16,7 +16,8 @@ class RegisterRepositoryImpl @Inject constructor(
         licenseNumber: String,
         specialty: String,
         email: String,
-        password: String
+        password: String,
+        role: String
     ): Result<RegisterResult> {
         return try {
             val response = registerApi.register(
@@ -25,7 +26,8 @@ class RegisterRepositoryImpl @Inject constructor(
                     licenseNumber = licenseNumber,
                     specialty = specialty,
                     email = email,
-                    password = password
+                    password = password,
+                    role = role
                 )
             )
             val domain = response.toDomain()
