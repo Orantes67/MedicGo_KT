@@ -57,7 +57,7 @@ fun PatientDetailDialog(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "${patient.name} ${patient.lastName}",
+                                text = patient.fullName,
                                 fontSize = 20.sp,
                                 color = PrimaryText,
                                 fontWeight = FontWeight.Bold
@@ -91,7 +91,7 @@ fun PatientDetailDialog(
                         horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
                     ) {
                         InfoCard("Edad", "${patient.age} años", Modifier.weight(1f))
-                        InfoCard("Tipo de Sangre", patient.bloodType, Modifier.weight(1f))
+                        InfoCard("Código", patient.code, Modifier.weight(1f))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -104,7 +104,7 @@ fun PatientDetailDialog(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
                     ) {
-                        InfoCard("Área", patient.areaName, Modifier.weight(1f))
+                        InfoCard("Área", patient.area, Modifier.weight(1f))
                         InfoCard("Estado", patient.currentState, Modifier.weight(1f))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -129,7 +129,7 @@ fun PatientDetailDialog(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = patient.symptoms,
+                        text = patient.conditionNote,
                         fontSize = 12.sp,
                         color = SecondaryText,
                         modifier = Modifier.padding(top = 6.dp)
@@ -172,8 +172,8 @@ fun PatientDetailDialog(
                             .padding(vertical = 8.dp),
                         horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
                     ) {
-                        InfoCard("Enfermera", patient.assignedNurseName, Modifier.weight(1f))
-                        InfoCard("Fecha Registro", patient.registrationDate, Modifier.weight(1f))
+                        InfoCard("Enfermera", patient.assignedNurse, Modifier.weight(1f))
+                        InfoCard("Próxima Cita", patient.nextAppointment, Modifier.weight(1f))
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -186,7 +186,7 @@ fun PatientDetailDialog(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = patient.lastUpdateTime,
+                        text = patient.lastUpdate,
                         fontSize = 12.sp,
                         color = SecondaryText,
                         modifier = Modifier.padding(top = 6.dp)

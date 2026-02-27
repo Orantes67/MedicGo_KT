@@ -1,76 +1,83 @@
 package com.TiololCode.medicgo.core.security
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private val Context.dataStore by preferencesDataStore(name = "medicgo_prefs")
+
 @Singleton
 class TokenManager @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        PREFS_NAME,
-        Context.MODE_PRIVATE
-    )
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    fun saveToken(token: String) {
-        sharedPreferences.edit().putString(KEY_TOKEN, token).apply()
+    private object Keys {
+        val TOKEN     = stringPreferencesKey("auth_token")
+        val ROLE      = stringPreferencesKey("user_role")
+        val USER_ID   = longPreferencesKey("user_id")
+        val USER_NAME = stringPreferencesKey("user_name")
+        val USER_EMAIL= stringPreferencesKey("user_email")
     }
 
-    fun getToken(): String? {
-        return sharedPreferences.getString(KEY_TOKEN, null)
+    val tokenFlow: StateFlow<String?> = context.dataStore.data
+        .map { it[Keys.TOKEN] }
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    val roleFlow: StateFlow<String?> = context.dataStore.data
+        .map { it[Keys.ROLE] }
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    val userIdFlow: StateFlow<Long?> = context.dataStore.data
+        .map { prefs -> prefs[Keys.USER_ID] }
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    val userNameFlow: StateFlow<String?> = context.dataStore.data
+        .map { it[Keys.USER_NAME] }
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    val userEmailFlow: StateFlow<String?> = context.dataStore.data
+        .map { it[Keys.USER_EMAIL] }
+        .stateIn(scope, SharingStarted.Eagerly, null)
+
+    // --- Sync reads (non-blocking, read in-memory StateFlow value) ---
+    fun getToken(): String?  = tokenFlow.value
+    fun hasToken(): Boolean  = tokenFlow.value != null
+    fun getUserRole(): String?  = roleFlow.value
+    fun getUserId(): Long?       = userIdFlow.value
+    fun getUserName(): String?   = userNameFlow.value
+    fun getUserEmail(): String?  = userEmailFlow.value
+
+    // --- Suspend writes ---
+    suspend fun saveToken(token: String) {
+        context.dataStore.edit { it[Keys.TOKEN] = token }
     }
 
-    fun clearToken() {
-        sharedPreferences.edit().remove(KEY_TOKEN).apply()
+    suspend fun saveUserRole(role: String) {
+        context.dataStore.edit { it[Keys.ROLE] = role }
     }
 
-    fun hasToken(): Boolean {
-        return getToken() != null
+    suspend fun saveUserData(userId: Long, userName: String, email: String) {
+        context.dataStore.edit {
+            it[Keys.USER_ID]    = userId
+            it[Keys.USER_NAME]  = userName
+            it[Keys.USER_EMAIL] = email
+        }
     }
 
-    fun saveUserRole(role: String) {
-        sharedPreferences.edit().putString(KEY_ROLE, role).apply()
-    }
-
-    fun getUserRole(): String? {
-        return sharedPreferences.getString(KEY_ROLE, null)
-    }
-
-    fun saveUserData(userId: Long, userName: String, email: String) {
-        sharedPreferences.edit().apply {
-            putLong(KEY_USER_ID, userId)
-            putString(KEY_USER_NAME, userName)
-            putString(KEY_USER_EMAIL, email)
-        }.apply()
-    }
-
-    fun getUserId(): Long? {
-        val id = sharedPreferences.getLong(KEY_USER_ID, -1L)
-        return if (id == -1L) null else id
-    }
-
-    fun getUserName(): String? {
-        return sharedPreferences.getString(KEY_USER_NAME, null)
-    }
-
-    fun getUserEmail(): String? {
-        return sharedPreferences.getString(KEY_USER_EMAIL, null)
-    }
-
-    fun clearAllData() {
-        sharedPreferences.edit().clear().apply()
-    }
-
-    companion object {
-        private const val PREFS_NAME = "medicgo_prefs"
-        private const val KEY_TOKEN = "auth_token"
-        private const val KEY_ROLE = "user_role"
-        private const val KEY_USER_ID = "user_id"
-        private const val KEY_USER_NAME = "user_name"
-        private const val KEY_USER_EMAIL = "user_email"
+    suspend fun clearAllData() {
+        context.dataStore.edit { it.clear() }
     }
 }
-

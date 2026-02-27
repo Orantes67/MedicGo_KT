@@ -3,6 +3,7 @@ package com.TiololCode.medicgo.features.login.presentation.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.TiololCode.medicgo.core.navigation.DoctorDashboard
 import com.TiololCode.medicgo.core.navigation.Login
 import com.TiololCode.medicgo.core.navigation.Register
 import com.TiololCode.medicgo.core.navigation.RouteRegistrar
@@ -21,7 +22,9 @@ class LoginRouteRegistrar @Inject constructor() : RouteRegistrar {
             LoginScreen(
                 onNavigateToRegister = { navController.navigate(Register) },
                 onLoginSuccess = {
-                    // TODO: navigate to Home once that feature is added
+                    navController.navigate(DoctorDashboard) {
+                        popUpTo(Login) { inclusive = true }
+                    }
                 }
             )
         }

@@ -3,42 +3,41 @@ package com.TiololCode.medicgo.features.doctor.presentation.screens.doctor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.DoctorViewModel
 import com.TiololCode.medicgo.features.doctor.presentation.components.DoctorHeader
-import com.TiololCode.medicgo.features.doctor.presentation.components.PatientDetailDialog
-import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorMetric
-import com.TiololCode.medicgo.features.doctor.presentation.screens.doctor.data.sampleDoctorPatients
+import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.DoctorEvent
+import com.TiololCode.medicgo.features.doctor.presentation.viewmodels.DoctorViewModel
 
 private val ScreenBackground = Color(0xFFF5F7FA)
 
 @Composable
 fun DoctorScreen(
     viewModel: DoctorViewModel = hiltViewModel(),
+    onPatientClick: (Long) -> Unit,
     onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        viewModel.updateDoctorInfo("Dr. Carlos Ruiz", "Cardiología")
-        viewModel.updatePatients(sampleDoctorPatients)
-        viewModel.updateMetrics(
-            DoctorMetric(
-                totalPatients = 3,
-                patientsUnderObservation = 1,
-                criticalPatients = 1,
-                stablePatients = 1
-            )
-        )
+        viewModel.events.collect { event ->
+            when (event) {
+                is DoctorEvent.Error -> snackbarHostState.showSnackbar(event.message)
+            }
+        }
     }
 
     Box(
@@ -49,7 +48,7 @@ fun DoctorScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             DoctorHeader(
                 doctorName = uiState.doctorName,
-                specialty = uiState.doctorSpecialty,
+                specialty = "Médico",
                 onLogoutClick = onLogout
             )
             Box(
@@ -59,17 +58,15 @@ fun DoctorScreen(
             ) {
                 DoctorContent(
                     uiState = uiState,
-                    viewModel = viewModel
+                    onPatientClick = onPatientClick
                 )
             }
         }
 
-        uiState.selectedPatient?.let { patient ->
-            PatientDetailDialog(
-                patient = patient,
-                onDismiss = { viewModel.selectPatient(null) }
-            )
-        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

@@ -1,42 +1,33 @@
 package com.TiololCode.medicgo.features.doctor.data.repositories
 
-import com.TiololCode.medicgo.features.doctor.domain.repositories.PatientRepository
+import com.TiololCode.medicgo.features.doctor.data.datasource.remote.api.DoctorApi
+import com.TiololCode.medicgo.features.doctor.data.datasource.remote.mapper.toDomain
+import com.TiololCode.medicgo.features.doctor.data.datasource.remote.model.AddNoteRequestDto
+import com.TiololCode.medicgo.features.doctor.data.datasource.remote.model.UpdateStateRequestDto
 import com.TiololCode.medicgo.features.doctor.domain.entities.PatientNote
-import com.TiololCode.medicgo.features.doctor.data.datasource.DoctorMockData
+import com.TiololCode.medicgo.features.doctor.domain.repositories.PatientRepository
 import javax.inject.Inject
 
-class PatientRepositoryImpl @Inject constructor() : PatientRepository {
+class PatientRepositoryImpl @Inject constructor(
+    private val doctorApi: DoctorApi
+) : PatientRepository {
 
-    override suspend fun getPatientNotes(patientId: Long): Result<List<PatientNote>> {
-        return try {
-            val notes = DoctorMockData.getMockPatientNotes()
-            Result.success(notes)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun addPatientNote(patientId: Long, content: String): Result<PatientNote> {
-        return try {
-            val newNote = PatientNote(
-                id = System.currentTimeMillis(),
-                patientId = patientId,
-                doctorId = 1,
-                content = content,
-                createdDate = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(java.util.Date())
+    override suspend fun updatePatientState(patientId: Long, newState: String): Result<String> =
+        runCatching {
+            val response = doctorApi.updatePatientState(
+                patientId,
+                UpdateStateRequestDto(estado = newState)
             )
-            Result.success(newNote)
-        } catch (e: Exception) {
-            Result.failure(e)
+            response.estado ?: newState
         }
-    }
 
-    override suspend fun updatePatientState(patientId: Long, newState: String): Result<Boolean> {
-        return try {
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
+    override suspend fun addPatientNote(patientId: Long, content: String): Result<PatientNote> =
+        runCatching {
+            doctorApi.addPatientNote(
+                patientId,
+                AddNoteRequestDto(contenido = content)
+            ).toDomain()
         }
-    }
 }
+
 

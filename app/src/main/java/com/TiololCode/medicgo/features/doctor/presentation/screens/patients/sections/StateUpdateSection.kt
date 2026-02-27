@@ -2,6 +2,7 @@ package com.TiololCode.medicgo.features.doctor.presentation.screens.patients.sec
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,27 +25,23 @@ import androidx.compose.ui.unit.sp
 
 private val PrimaryText = Color(0xFF1A1A2E)
 private val SubtitleText = Color(0xFF888888)
-private val AccentBlue = Color(0xFF2979FF)
 private val CardBackground = Color.White
-private val FieldBorder = Color(0xFFE0E0E0)
-private val FieldBackground = Color(0xFFF9F9F9)
+
+private val stateOptions = listOf("estable", "observacion", "critico")
+private val stateLabels = mapOf(
+    "estable"     to "Estable",
+    "observacion" to "Observaci\u00f3n",
+    "critico"     to "Cr\u00edtico"
+)
 
 @Composable
 fun StateUpdateSection(
     currentState: String,
-    newState: String,
-    onStateChange: (String) -> Unit,
-    onUpdateClick: () -> Unit
+    selectedState: String,
+    onStateSelect: (String) -> Unit,
+    onConfirmClick: () -> Unit,
+    isUpdatingState: Boolean
 ) {
-    val textFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = AccentBlue,
-        unfocusedBorderColor = FieldBorder,
-        focusedLabelColor = AccentBlue,
-        unfocusedLabelColor = SubtitleText,
-        unfocusedContainerColor = FieldBackground,
-        focusedContainerColor = CardBackground
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,29 +50,61 @@ fun StateUpdateSection(
             .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
-        Text(text = "Actualizar Estado", fontSize = 15.sp, color = PrimaryText, fontWeight = FontWeight.Bold)
+        Text(
+            text = "Actualizar Estado",
+            fontSize = 15.sp,
+            color = PrimaryText,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         CurrentStateDisplay(currentState = currentState)
 
         Spacer(modifier = Modifier.height(12.dp))
-        OutlinedTextField(
-            value = newState,
-            onValueChange = onStateChange,
-            label = { Text("Nuevo estado") },
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            colors = textFieldColors,
-            singleLine = true
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            stateOptions.forEach { state ->
+                val isSelected = selectedState.lowercase() == state
+                val color = stateColor(state)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(
+                            color = if (isSelected) color.copy(alpha = 0.15f) else Color(0xFFF5F7FA),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .border(
+                            width = if (isSelected) 2.dp else 1.dp,
+                            color = if (isSelected) color else Color(0xFFE0E0E0),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .clickable { onStateSelect(state) }
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stateLabels[state] ?: state,
+                        fontSize = 12.sp,
+                        color = if (isSelected) color else SubtitleText,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = onUpdateClick,
+            onClick = onConfirmClick,
+            enabled = !isUpdatingState,
             colors = ButtonDefaults.buttonColors(containerColor = PrimaryText),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Actualizar Estado", fontWeight = FontWeight.SemiBold)
+            Text(
+                text = if (isUpdatingState) "Actualizando..." else "Confirmar Estado",
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

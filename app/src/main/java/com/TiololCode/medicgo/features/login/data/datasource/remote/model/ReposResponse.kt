@@ -11,7 +11,8 @@ data class UserDto(
     @SerializedName("id") val id: Long?,
     @SerializedName("name") val name: String?,
     @SerializedName("email") val email: String?,
-    @SerializedName("license_number") val licenseNumber: String?
+    @SerializedName("license_number") val licenseNumber: String?,
+    @SerializedName("role") val role: String?
 )
 
 data class LoginResponseDto(

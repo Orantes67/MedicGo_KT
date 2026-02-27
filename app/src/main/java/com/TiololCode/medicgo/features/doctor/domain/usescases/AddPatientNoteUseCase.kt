@@ -8,11 +8,8 @@ class AddPatientNoteUseCase @Inject constructor(
     private val patientRepository: PatientRepository
 ) {
     suspend operator fun invoke(patientId: Long, content: String): Result<PatientNote> {
-        return try {
-            patientRepository.addPatientNote(patientId, content)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        if (content.isBlank()) return Result.failure(IllegalArgumentException("La nota no puede estar vacía"))
+        return patientRepository.addPatientNote(patientId, content)
     }
 }
 

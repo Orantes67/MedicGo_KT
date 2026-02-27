@@ -13,7 +13,8 @@ fun LoginResponseDto.toDomain(): LoginResult {
                 id = it.id ?: 0L,
                 name = it.name.orEmpty(),
                 email = it.email.orEmpty(),
-                licenseNumber = it.licenseNumber.orEmpty()
+                licenseNumber = it.licenseNumber.orEmpty(),
+                role = it.role.orEmpty()
             )
         }
     )

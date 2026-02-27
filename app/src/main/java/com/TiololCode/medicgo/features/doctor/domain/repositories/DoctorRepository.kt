@@ -1,10 +1,10 @@
 package com.TiololCode.medicgo.features.doctor.domain.repositories
 
-import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorPatient
-import com.TiololCode.medicgo.features.doctor.domain.entities.DoctorMetric
+import com.TiololCode.medicgo.features.doctor.domain.entities.MyPatientsResult
+import com.TiololCode.medicgo.features.doctor.domain.entities.PatientDetail
 
 interface DoctorRepository {
-    suspend fun getDoctorMetrics(doctorId: Long): Result<DoctorMetric>
-    suspend fun getDoctorPatients(doctorId: Long): Result<List<DoctorPatient>>
+    suspend fun getMyPatients(): Result<MyPatientsResult>
+    suspend fun getPatientDetail(patientId: Long): Result<PatientDetail>
 }
 
