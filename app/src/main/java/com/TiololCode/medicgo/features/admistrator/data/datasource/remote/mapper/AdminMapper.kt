@@ -20,34 +20,34 @@ fun MetricsResponseDto.toMetric(): Metric {
 
 fun HealthProfessionalDto.toHealthProfessional(): HealthProfessional {
     return HealthProfessional(
-        id = id,
-        name = name,
-        profession = role,
-        licenseNumber = licenseNumber
+        id = id.orEmpty(),
+        name = name.orEmpty(),
+        profession = role.orEmpty(),
+        licenseNumber = licenseNumber.orEmpty()
     )
 }
 
 fun PatientDto.toPatient(): Patient {
     return Patient(
-        id = id,
-        name = name,
-        lastName = lastName,
-        bloodType = bloodType,
-        symptoms = symptoms,
-        currentState = currentState,
-        age = age,
-        registrationDate = registrationDate,
-        areaId = areaId,
-        assignedDoctor = assignedDoctor,
-        assignedNurse = assignedNurse
+        id = id.orEmpty(),
+        name = name.orEmpty(),
+        lastName = lastName.orEmpty(),
+        bloodType = bloodType.orEmpty(),
+        symptoms = symptoms.orEmpty(),
+        currentState = currentState.orEmpty(),
+        age = age ?: 0,
+        registrationDate = registrationDate.orEmpty(),
+        areaId = areaId.orEmpty(),
+        assignedDoctor = assignedDoctor.orEmpty(),
+        assignedNurse = assignedNurse.orEmpty()
     )
 }
 
 fun AreaResponseDto.toArea(): Area {
     return Area(
-        id = id,
-        name = name,
-        patientCount = totalPatients
+        id = id.orEmpty(),
+        name = name.orEmpty(),
+        patientCount = totalPatients ?: 0
     )
 }
 

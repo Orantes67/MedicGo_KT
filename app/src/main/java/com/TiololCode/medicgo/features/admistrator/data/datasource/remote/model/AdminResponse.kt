@@ -9,11 +9,11 @@ data class MetricsResponseDto(
 )
 
 data class HealthProfessionalDto(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("email") val email: String,
-    @SerializedName("license_number") val licenseNumber: String,
-    @SerializedName("rol") val role: String,
+    @SerializedName("id") val id: String?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("email") val email: String?,
+    @SerializedName("license_number") val licenseNumber: String?,
+    @SerializedName("rol") val role: String?,
     @SerializedName("especialidad") val specialty: String? = null
 )
 
@@ -23,17 +23,17 @@ data class HealthProfessionalsResponseDto(
 )
 
 data class PatientDto(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("lastName") val lastName: String,
-    @SerializedName("bloodType") val bloodType: String,
-    @SerializedName("symptoms") val symptoms: String,
-    @SerializedName("currentState") val currentState: String,
-    @SerializedName("age") val age: Int,
-    @SerializedName("registrationDate") val registrationDate: String,
-    @SerializedName("areaId") val areaId: Long,
-    @SerializedName("assignedDoctor") val assignedDoctor: Long,
-    @SerializedName("assignedNurse") val assignedNurse: Long
+    @SerializedName("id") val id: String?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("lastName") val lastName: String?,
+    @SerializedName("bloodType") val bloodType: String?,
+    @SerializedName("symptoms") val symptoms: String?,
+    @SerializedName("currentState") val currentState: String?,
+    @SerializedName("age") val age: Int?,
+    @SerializedName("registrationDate") val registrationDate: String?,
+    @SerializedName("areaId") val areaId: String?,
+    @SerializedName("assignedDoctor") val assignedDoctor: String?,
+    @SerializedName("assignedNurse") val assignedNurse: String?
 )
 
 data class AreaDistributionDto(
@@ -43,9 +43,9 @@ data class AreaDistributionDto(
 )
 
 data class AreaResponseDto(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("total_patients") val totalPatients: Int
+    @SerializedName("id") val id: String?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("total_patients") val totalPatients: Int?
 )
 
 data class CreateProfessionalRequestDto(
@@ -58,8 +58,8 @@ data class CreateProfessionalRequestDto(
 )
 
 data class AssignNurseRequestDto(
-    @SerializedName("enfermero_id") val nurseId: Long,
-    @SerializedName("doctor_id") val doctorId: Long
+    @SerializedName("enfermero_id") val nurseId: String,
+    @SerializedName("doctor_id") val doctorId: String
 )
 
 data class CreatePatientRequestDto(
@@ -69,9 +69,9 @@ data class CreatePatientRequestDto(
     @SerializedName("symptoms") val symptoms: String,
     @SerializedName("currentState") val currentState: String,
     @SerializedName("age") val age: Int,
-    @SerializedName("areaId") val areaId: Long,
-    @SerializedName("assignedDoctor") val assignedDoctor: Long,
-    @SerializedName("assignedNurse") val assignedNurse: Long
+    @SerializedName("areaId") val areaId: String,
+    @SerializedName("assignedDoctor") val assignedDoctor: String,
+    @SerializedName("assignedNurse") val assignedNurse: String
 )
 
 

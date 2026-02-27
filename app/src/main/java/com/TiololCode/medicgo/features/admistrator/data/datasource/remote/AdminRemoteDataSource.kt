@@ -69,7 +69,7 @@ class AdminRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun assignNurse(nurseId: Long, doctorId: Long): Result<Unit> {
+    suspend fun assignNurse(nurseId: String, doctorId: String): Result<Unit> {
         return try {
             val request = AssignNurseRequestDto(nurseId, doctorId)
             adminApi.assignNurse(request)

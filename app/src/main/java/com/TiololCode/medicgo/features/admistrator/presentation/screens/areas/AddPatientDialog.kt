@@ -291,11 +291,11 @@ fun AddPatientDialog(
                     Button(
                         onClick = {
                             val age = ageText.toIntOrNull() ?: 0
-                            val doctorId = assignedDoctorIdText.toLongOrNull() ?: 0L
-                            val nurseId = assignedNurseIdText.toLongOrNull() ?: 0L
-                            val areaId = if (areas.isNotEmpty()) areas.getOrNull(selectedAreaIndex)?.id ?: 0L else 0L
+                            val doctorId = assignedDoctorIdText.trim()
+                            val nurseId = assignedNurseIdText.trim()
+                            val areaId = if (areas.isNotEmpty()) areas.getOrNull(selectedAreaIndex)?.id.orEmpty() else ""
                             val patient = Patient(
-                                id = 0L,
+                                id = "",
                                 name = name.trim(),
                                 lastName = lastName.trim(),
                                 bloodType = bloodType.trim(),

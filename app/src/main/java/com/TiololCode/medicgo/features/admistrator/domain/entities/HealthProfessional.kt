@@ -1,7 +1,7 @@
 package com.TiololCode.medicgo.features.admistrator.domain.entities
 
 data class HealthProfessional(
-    val id: Long,
+    val id: String,
     val name: String,
     val profession: String,
     val licenseNumber: String
