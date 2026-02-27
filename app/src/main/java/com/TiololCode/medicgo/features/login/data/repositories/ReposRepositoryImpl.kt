@@ -24,7 +24,7 @@ class LoginRepositoryImpl @Inject constructor(
         } catch (e: HttpException) {
             val errorBody = try { e.response()?.errorBody()?.string() } catch (_: Exception) { null }
             val message = when (e.code()) {
-                401 -> "Email o contraseña incorrectos"
+                401 -> "Credenciales incorrectas. Usa tu número de colegiado (no email) y contraseña"
                 400 -> "Error 400: ${errorBody ?: "Datos inválidos"}"
                 500 -> "Error en el servidor. Intenta más tarde"
                 else -> "Error ${e.code()}: ${errorBody ?: "desconocido"}"
