@@ -3,6 +3,7 @@ package com.TiololCode.medicgo.features.login.presentation.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.TiololCode.medicgo.core.navigation.AdminDashboard
 import com.TiololCode.medicgo.core.navigation.DoctorDashboard
 import com.TiololCode.medicgo.core.navigation.EnfermeroDashboard
 import com.TiololCode.medicgo.core.navigation.Login
@@ -29,6 +30,7 @@ class LoginRouteRegistrar @Inject constructor(
                 onLoginSuccess = {
                     val destination = when (tokenManager.getUserRole()?.lowercase()) {
                         "enfermero", "enfermera", "nurse" -> EnfermeroDashboard
+                        "admin", "administrador", "administrator" -> AdminDashboard
                         else -> DoctorDashboard
                     }
                     navController.navigate(destination) {

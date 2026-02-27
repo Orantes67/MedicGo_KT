@@ -17,3 +17,6 @@ data class PatientDetail(val patientId: Long)
 @Serializable
 object EnfermeroDashboard
 
+@Serializable
+object AdminDashboard
+
