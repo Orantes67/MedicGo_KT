@@ -2,7 +2,6 @@ package com.TiololCode.medicgo.core.security
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,7 +26,7 @@ class TokenManager @Inject constructor(
     private object Keys {
         val TOKEN     = stringPreferencesKey("auth_token")
         val ROLE      = stringPreferencesKey("user_role")
-        val USER_ID   = longPreferencesKey("user_id")
+        val USER_ID   = stringPreferencesKey("user_id")
         val USER_NAME = stringPreferencesKey("user_name")
         val USER_EMAIL= stringPreferencesKey("user_email")
     }
@@ -40,7 +39,7 @@ class TokenManager @Inject constructor(
         .map { it[Keys.ROLE] }
         .stateIn(scope, SharingStarted.Eagerly, null)
 
-    val userIdFlow: StateFlow<Long?> = context.dataStore.data
+    val userIdFlow: StateFlow<String?> = context.dataStore.data
         .map { prefs -> prefs[Keys.USER_ID] }
         .stateIn(scope, SharingStarted.Eagerly, null)
 
@@ -56,7 +55,7 @@ class TokenManager @Inject constructor(
     fun getToken(): String?  = tokenFlow.value
     fun hasToken(): Boolean  = tokenFlow.value != null
     fun getUserRole(): String?  = roleFlow.value
-    fun getUserId(): Long?       = userIdFlow.value
+    fun getUserId(): String?      = userIdFlow.value
     fun getUserName(): String?   = userNameFlow.value
     fun getUserEmail(): String?  = userEmailFlow.value
 
@@ -69,7 +68,7 @@ class TokenManager @Inject constructor(
         context.dataStore.edit { it[Keys.ROLE] = role }
     }
 
-    suspend fun saveUserData(userId: Long, userName: String, email: String) {
+    suspend fun saveUserData(userId: String, userName: String, email: String) {
         context.dataStore.edit {
             it[Keys.USER_ID]    = userId
             it[Keys.USER_NAME]  = userName

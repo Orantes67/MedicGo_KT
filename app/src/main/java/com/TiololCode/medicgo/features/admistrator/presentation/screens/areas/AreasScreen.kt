@@ -45,6 +45,8 @@ fun AreasScreen(viewModel: AreasViewModel = hiltViewModel()) {
         if (showDialog) {
             AddPatientDialog(
                 areas = uiState.areas,
+                doctors = uiState.doctors,
+                nurses = uiState.nurses,
                 initialAreaIndex = 0,
                 onDismiss = { showDialog = false },
                 onSave = { patient ->

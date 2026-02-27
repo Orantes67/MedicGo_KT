@@ -5,6 +5,7 @@ import com.TiololCode.medicgo.features.login.data.datasource.remote.mapper.toDom
 import com.TiololCode.medicgo.features.login.data.datasource.remote.model.LoginRequest
 import com.TiololCode.medicgo.features.login.domain.entities.LoginResult
 import com.TiololCode.medicgo.features.login.domain.repositories.LoginRepository
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
@@ -20,8 +21,17 @@ class LoginRepositoryImpl @Inject constructor(
             } else {
                 Result.success(domain)
             }
+        } catch (e: HttpException) {
+            val errorBody = try { e.response()?.errorBody()?.string() } catch (_: Exception) { null }
+            val message = when (e.code()) {
+                401 -> "Credenciales incorrectas. Usa tu número de colegiado (no email) y contraseña"
+                400 -> "Error 400: ${errorBody ?: "Datos inválidos"}"
+                500 -> "Error en el servidor. Intenta más tarde"
+                else -> "Error ${e.code()}: ${errorBody ?: "desconocido"}"
+            }
+            Result.failure(Exception(message))
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception("Sin conexión o error inesperado"))
         }
     }
 }
