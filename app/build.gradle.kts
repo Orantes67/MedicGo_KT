@@ -77,4 +77,5 @@ dependencies {
     ksp(libs.hilt.compiler)                                         // Procesador de anotaciones KSP
     implementation(libs.hilt.navigation.compose)                    // Integración con Jetpack Compose
     implementation(libs.kotlinx.serialization.json)                 // Serialización para rutas de navegación type-safe
+    implementation(libs.aandroidx.datastore.preferences)            // DataStore Preferences
 }

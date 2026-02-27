@@ -8,3 +8,9 @@ object Login
 @Serializable
 object Register
 
+@Serializable
+object DoctorDashboard
+
+@Serializable
+data class PatientDetail(val patientId: Long)
+

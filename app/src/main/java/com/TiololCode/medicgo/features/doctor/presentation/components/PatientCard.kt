@@ -46,7 +46,7 @@ fun PatientCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${patient.name} ${patient.lastName}",
+                        text = patient.fullName,
                         fontSize = 14.sp,
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
@@ -62,9 +62,9 @@ fun PatientCard(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = when (patient.currentState) {
-                                "Crítico" -> Color(0xFFFFEBEE)
-                                "En observación" -> Color(0xFFFFF3E0)
+                            color = when {
+                                patient.currentState.contains("crít", ignoreCase = true) -> Color(0xFFFFEBEE)
+                                patient.currentState.contains("observ", ignoreCase = true) -> Color(0xFFFFF3E0)
                                 else -> Color(0xFFE8F5E9)
                             },
                             shape = RoundedCornerShape(6.dp)
@@ -74,9 +74,9 @@ fun PatientCard(
                     Text(
                         text = patient.currentState,
                         fontSize = 11.sp,
-                        color = when (patient.currentState) {
-                            "Crítico" -> Color(0xFFC62828)
-                            "En observación" -> Color(0xFFE65100)
+                        color = when {
+                            patient.currentState.contains("crít", ignoreCase = true) -> Color(0xFFC62828)
+                            patient.currentState.contains("observ", ignoreCase = true) -> Color(0xFFE65100)
                             else -> Color(0xFF2E7D32)
                         },
                         fontWeight = FontWeight.SemiBold
@@ -85,7 +85,7 @@ fun PatientCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = patient.areaName,
+                text = patient.area,
                 fontSize = 12.sp,
                 color = SecondaryText
             )

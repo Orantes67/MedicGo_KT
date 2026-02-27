@@ -35,6 +35,7 @@ private val FieldBackground = Color(0xFFF9F9F9)
 fun PatientNotesSection(
     notes: List<PatientNote>,
     newNoteContent: String,
+    isAddingNote: Boolean,
     onNoteContentChange: (String) -> Unit,
     onAddNoteClick: () -> Unit
 ) {
@@ -80,11 +81,15 @@ fun PatientNotesSection(
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = onAddNoteClick,
+            enabled = !isAddingNote,
             colors = ButtonDefaults.buttonColors(containerColor = AccentBlue),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Agregar Nota", fontWeight = FontWeight.SemiBold)
+            Text(
+                if (isAddingNote) "Agregando..." else "Agregar Nota",
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
@@ -114,7 +119,7 @@ internal fun NoteItem(note: PatientNote) {
         Column {
             Text(text = note.content, fontSize = 13.sp, color = PrimaryText, lineHeight = 18.sp)
             Spacer(modifier = Modifier.height(6.dp))
-            Text(text = note.createdDate, fontSize = 11.sp, color = SubtitleText)
+            Text(text = "${note.author} • ${note.date}", fontSize = 11.sp, color = SubtitleText)
         }
     }
 }

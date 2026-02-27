@@ -46,7 +46,7 @@ fun MetricsSection(metrics: DoctorMetric) {
             Box(modifier = Modifier.weight(1f)) {
                 MetricCard(
                     title = "Total Pacientes",
-                    value = metrics.totalPatients.toString(),
+                    value = metrics.total.toString(),
                     accentColor = Color(0xFF2979FF),
                     dotColor = Color(0xFF2979FF)
                 )
@@ -54,7 +54,7 @@ fun MetricsSection(metrics: DoctorMetric) {
             Box(modifier = Modifier.weight(1f)) {
                 MetricCard(
                     title = "Observación",
-                    value = metrics.patientsUnderObservation.toString(),
+                    value = metrics.observation.toString(),
                     accentColor = Color(0xFFFFA726),
                     dotColor = Color(0xFFFFA726)
                 )
@@ -68,7 +68,7 @@ fun MetricsSection(metrics: DoctorMetric) {
             Box(modifier = Modifier.weight(1f)) {
                 MetricCard(
                     title = "Críticos",
-                    value = metrics.criticalPatients.toString(),
+                    value = metrics.critical.toString(),
                     accentColor = Color(0xFFE53935),
                     dotColor = Color(0xFFE53935)
                 )
@@ -76,7 +76,7 @@ fun MetricsSection(metrics: DoctorMetric) {
             Box(modifier = Modifier.weight(1f)) {
                 MetricCard(
                     title = "Estables",
-                    value = metrics.stablePatients.toString(),
+                    value = metrics.stable.toString(),
                     accentColor = Color(0xFF43A047),
                     dotColor = Color(0xFF43A047)
                 )

@@ -53,20 +53,20 @@ fun CriticalPatientAlert(patient: DoctorPatient) {
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${patient.name} ${patient.lastName}",
+                    text = patient.fullName,
                     fontSize = 14.sp,
                     color = CriticalText,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Actualizado: ${patient.lastUpdateTime}",
+                    text = "Actualizado: ${patient.lastUpdate}",
                     fontSize = 12.sp,
                     color = SecondaryText
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Área: ${patient.areaName}",
+                    text = "Área: ${patient.area}",
                     fontSize = 12.sp,
                     color = SecondaryText
                 )
