@@ -43,26 +43,11 @@ private val PlaceholderColor = Color(0xFFADB5BD)
 private val LabelColor = Color(0xFF374151)
 
 val medicalSpecialties = listOf(
-    "Medicina General",
-    "Cardiología",
-    "Neurología",
-    "Pediatría",
-    "Ginecología y Obstetricia",
-    "Traumatología y Ortopedia",
-    "Dermatología",
-    "Oftalmología",
-    "Psiquiatría",
-    "Oncología",
-    "Endocrinología",
-    "Gastroenterología",
-    "Nefrología",
-    "Neumología",
-    "Urología",
-    "Anestesiología",
-    "Radiología",
-    "Cirugía General",
-    "Medicina Interna",
-    "Reumatología"
+    "urgencias",
+    "hospitalizacion",
+    "uci",
+    "cirugia",
+    "pediatria"
 )
 
 @Composable
@@ -352,7 +337,7 @@ fun RoleDropdownField(
     onRoleSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val roles = listOf("doctor", "enfermero", "administrador")
+    val roles = listOf("doctor", "enfermero")
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = "Role",
