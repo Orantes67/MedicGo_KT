@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.TiololCode.medicgo.R
-import com.TiololCode.medicgo.features.login.presentation.components.LicenseInputField
+import com.TiololCode.medicgo.features.login.presentation.components.EmailInputField
 import com.TiololCode.medicgo.features.login.presentation.components.PasswordInputField
 import androidx.compose.foundation.layout.safeDrawingPadding
 import com.TiololCode.medicgo.features.login.presentation.viewmodels.LoginViewModel
@@ -132,10 +132,10 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Componente: campo de licencia
-                LicenseInputField(
-                    value = uiState.licenseNumber,
-                    onValueChange = viewModel::onLicenseNumberChange
+                // Componente: campo de email
+                EmailInputField(
+                    value = uiState.email,
+                    onValueChange = viewModel::onEmailChange
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

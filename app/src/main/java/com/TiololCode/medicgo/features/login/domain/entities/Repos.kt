@@ -1,7 +1,7 @@
 package com.TiololCode.medicgo.features.login.domain.entities
 
 data class User(
-    val id: Long,
+    val id: String,
     val name: String,
     val email: String,
     val licenseNumber: String,

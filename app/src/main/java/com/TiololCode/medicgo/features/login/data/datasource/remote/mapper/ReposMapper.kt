@@ -10,7 +10,7 @@ fun LoginResponseDto.toDomain(): LoginResult {
         token = token.orEmpty(),
         user = user?.let {
             User(
-                id = it.id ?: 0L,
+                id = it.id.orEmpty(),
                 name = it.name.orEmpty(),
                 email = it.email.orEmpty(),
                 licenseNumber = it.licenseNumber.orEmpty(),
