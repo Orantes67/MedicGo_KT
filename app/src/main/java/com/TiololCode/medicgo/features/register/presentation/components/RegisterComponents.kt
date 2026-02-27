@@ -343,3 +343,84 @@ fun RegisterPasswordInputField(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RoleDropdownField(
+    value: String,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    onRoleSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val roles = listOf("doctor", "enfermero", "administrador")
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = "Role",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = LabelColor
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = onExpandedChange,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = value,
+                onValueChange = {},
+                readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(),
+                placeholder = {
+                    Text(
+                        text = "Select your role",
+                        color = PlaceholderColor,
+                        fontSize = 14.sp
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Role",
+                        tint = PlaceholderColor
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Expand",
+                        tint = PlaceholderColor
+                    )
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = FocusBorderColor,
+                    unfocusedBorderColor = UnfocusBorderColor,
+                    focusedTextColor = TextColor,
+                    unfocusedTextColor = TextColor
+                )
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { onExpandedChange(false) }
+            ) {
+                roles.forEach { role ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = role,
+                                fontSize = 14.sp,
+                                color = TextColor
+                            )
+                        },
+                        onClick = { onRoleSelected(role) }
+                    )
+                }
+            }
+        }
+    }
+}
+

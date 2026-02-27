@@ -8,7 +8,8 @@ interface RegisterRepository {
         licenseNumber: String,
         specialty: String,
         email: String,
-        password: String
+        password: String,
+        role: String
     ): Result<RegisterResult>
 }
 

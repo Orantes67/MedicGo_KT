@@ -48,6 +48,7 @@ import com.TiololCode.medicgo.features.register.presentation.components.EmailInp
 import com.TiololCode.medicgo.features.register.presentation.components.FullNameInputField
 import com.TiololCode.medicgo.features.register.presentation.components.LicenseNumberInputField
 import com.TiololCode.medicgo.features.register.presentation.components.RegisterPasswordInputField
+import com.TiololCode.medicgo.features.register.presentation.components.RoleDropdownField
 import com.TiololCode.medicgo.features.register.presentation.components.SpecialtyDropdownField
 import com.TiololCode.medicgo.features.register.presentation.viewmodels.RegisterViewModel
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -208,6 +209,16 @@ fun RegisterScreen(
                     RegisterPasswordInputField(
                         value = uiState.password,
                         onValueChange = viewModel::onPasswordChange
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Role dropdown
+                    RoleDropdownField(
+                        value = uiState.role,
+                        expanded = uiState.roleExpanded,
+                        onExpandedChange = viewModel::onRoleExpandedChange,
+                        onRoleSelected = viewModel::onRoleChange
                     )
 
                     // Error message
