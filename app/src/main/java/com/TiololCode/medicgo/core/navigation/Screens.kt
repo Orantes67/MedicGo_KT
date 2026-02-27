@@ -14,3 +14,6 @@ object DoctorDashboard
 @Serializable
 data class PatientDetail(val patientId: Long)
 
+@Serializable
+object EnfermeroDashboard
+
