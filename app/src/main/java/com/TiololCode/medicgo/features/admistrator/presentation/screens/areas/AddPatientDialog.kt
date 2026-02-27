@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.TiololCode.medicgo.features.admistrator.domain.entities.Area
+import com.TiololCode.medicgo.features.admistrator.domain.entities.HealthProfessional
 import com.TiololCode.medicgo.features.admistrator.domain.entities.Patient
 
 private val PrimaryText = Color(0xFF1A1A2E)
@@ -49,6 +50,8 @@ private val FieldBackground = Color(0xFFF9F9F9)
 @Composable
 fun AddPatientDialog(
     areas: List<Area>,
+    doctors: List<HealthProfessional> = emptyList(),
+    nurses: List<HealthProfessional> = emptyList(),
     initialAreaIndex: Int = 0,
     onDismiss: () -> Unit,
     onSave: (Patient) -> Unit
@@ -57,14 +60,21 @@ fun AddPatientDialog(
     var lastName by rememberSaveable { mutableStateOf("") }
     var bloodType by rememberSaveable { mutableStateOf("") }
     var symptoms by rememberSaveable { mutableStateOf("") }
-    var currentState by rememberSaveable { mutableStateOf("") }
+    var notaCondicion by rememberSaveable { mutableStateOf("") }
+    var selectedEstadoIndex by rememberSaveable { mutableStateOf(-1) }
     var ageText by rememberSaveable { mutableStateOf("") }
     var registrationDate by rememberSaveable { mutableStateOf("") }
-    var assignedDoctorIdText by rememberSaveable { mutableStateOf("") }
-    var assignedNurseIdText by rememberSaveable { mutableStateOf("") }
 
     var selectedAreaIndex by rememberSaveable { mutableStateOf(initialAreaIndex) }
+    var selectedDoctorIndex by rememberSaveable { mutableStateOf(-1) }
+    var selectedNurseIndex by rememberSaveable { mutableStateOf(-1) }
+
     var areaDropdownExpanded by remember { mutableStateOf(false) }
+    var doctorDropdownExpanded by remember { mutableStateOf(false) }
+    var nurseDropdownExpanded by remember { mutableStateOf(false) }
+    var estadoDropdownExpanded by remember { mutableStateOf(false) }
+
+    val estadosActuales = listOf("Estable", "Crítico", "Observación")
 
     val scrollState = rememberScrollState()
 
@@ -177,14 +187,74 @@ fun AddPatientDialog(
                     )
 
                     // Estado actual
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Estado actual",
+                            color = SubtitleText,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Button(
+                                onClick = { estadoDropdownExpanded = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = when (estadosActuales.getOrNull(selectedEstadoIndex)) {
+                                        "Estable" -> Color(0xFF4CAF50)
+                                        "Cr\u00edtico" -> Color(0xFFE53935)
+                                        "Observaci\u00f3n" -> Color(0xFFFF9800)
+                                        else -> Color(0xFFE0E0E0)
+                                    }
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = estadosActuales.getOrNull(selectedEstadoIndex) ?: "Seleccionar estado",
+                                    color = if (selectedEstadoIndex >= 0) Color.White else Color(0xFF888888),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = estadoDropdownExpanded,
+                                onDismissRequest = { estadoDropdownExpanded = false }
+                            ) {
+                                estadosActuales.forEachIndexed { index, estado ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = estado,
+                                                color = when (estado) {
+                                                    "Estable" -> Color(0xFF4CAF50)
+                                                    "Cr\u00edtico" -> Color(0xFFE53935)
+                                                    "Observaci\u00f3n" -> Color(0xFFFF9800)
+                                                    else -> PrimaryText
+                                                },
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                        },
+                                        onClick = {
+                                            selectedEstadoIndex = index
+                                            estadoDropdownExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Nota de condición (opcional)
                     OutlinedTextField(
-                        value = currentState,
-                        onValueChange = { currentState = it },
-                        label = { Text("Estado actual") },
+                        value = notaCondicion,
+                        onValueChange = { notaCondicion = it },
+                        label = { Text("Nota de condición (opcional)") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = textFieldColors,
-                        singleLine = true
+                        minLines = 2,
+                        maxLines = 3
                     )
 
                     // Área asignada
@@ -232,27 +302,146 @@ fun AddPatientDialog(
                         }
                     }
 
-                    // ID Doctor
-                    OutlinedTextField(
-                        value = assignedDoctorIdText,
-                        onValueChange = { assignedDoctorIdText = it.filter { c -> c.isDigit() } },
-                        label = { Text("ID Doctor") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = textFieldColors,
-                        singleLine = true
-                    )
+                    // Doctor asignado
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Doctor asignado",
+                            color = SubtitleText,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Button(
+                                onClick = { doctorDropdownExpanded = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (selectedDoctorIndex >= 0) Color(0xFF1A1A2E) else Color(0xFFE0E0E0)
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = doctors.getOrNull(selectedDoctorIndex)?.let {
+                                        if (it.name.isNotEmpty()) it.name else "Doctor #${selectedDoctorIndex + 1}"
+                                    } ?: "Seleccionar doctor",
+                                    color = if (selectedDoctorIndex >= 0) Color.White else Color(0xFF888888),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = doctorDropdownExpanded,
+                                onDismissRequest = { doctorDropdownExpanded = false }
+                            ) {
+                                if (doctors.isEmpty()) {
+                                    DropdownMenuItem(
+                                        text = { Text("No hay doctores disponibles", color = Color(0xFF888888)) },
+                                        onClick = { doctorDropdownExpanded = false }
+                                    )
+                                } else {
+                                    doctors.forEachIndexed { index, doctor ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Column {
+                                                    Text(
+                                                        text = doctor.name.ifEmpty { "Doctor ${index + 1}" },
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        fontSize = 14.sp
+                                                    )
+                                                    if (doctor.specialty.isNotEmpty()) {
+                                                        Text(
+                                                            text = doctor.specialty,
+                                                            fontSize = 12.sp,
+                                                            color = Color(0xFF2979FF)
+                                                        )
+                                                    }
+                                                    if (doctor.licenseNumber.isNotEmpty()) {
+                                                        Text(
+                                                            text = "Lic: ${doctor.licenseNumber}",
+                                                            fontSize = 11.sp,
+                                                            color = Color(0xFF888888)
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            onClick = {
+                                                selectedDoctorIndex = index
+                                                doctorDropdownExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                    // ID Enfermera
-                    OutlinedTextField(
-                        value = assignedNurseIdText,
-                        onValueChange = { assignedNurseIdText = it.filter { c -> c.isDigit() } },
-                        label = { Text("ID Enfermera") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = textFieldColors,
-                        singleLine = true
-                    )
+                    // Enfermera asignada
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Enfermera asignada",
+                            color = SubtitleText,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Button(
+                                onClick = { nurseDropdownExpanded = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (selectedNurseIndex >= 0) Color(0xFFE91E8C) else Color(0xFFE0E0E0)
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = nurses.getOrNull(selectedNurseIndex)?.let {
+                                        if (it.name.isNotEmpty()) it.name else "Enfermera #${selectedNurseIndex + 1}"
+                                    } ?: "Seleccionar enfermera",
+                                    color = if (selectedNurseIndex >= 0) Color.White else Color(0xFF888888),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = nurseDropdownExpanded,
+                                onDismissRequest = { nurseDropdownExpanded = false }
+                            ) {
+                                if (nurses.isEmpty()) {
+                                    DropdownMenuItem(
+                                        text = { Text("No hay enfermeras disponibles", color = Color(0xFF888888)) },
+                                        onClick = { nurseDropdownExpanded = false }
+                                    )
+                                } else {
+                                    nurses.forEachIndexed { index, nurse ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Column {
+                                                    Text(
+                                                        text = nurse.name.ifEmpty { "Enfermera ${index + 1}" },
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        fontSize = 14.sp
+                                                    )
+                                                    if (nurse.licenseNumber.isNotEmpty()) {
+                                                        Text(
+                                                            text = "Lic: ${nurse.licenseNumber}",
+                                                            fontSize = 11.sp,
+                                                            color = Color(0xFF888888)
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            onClick = {
+                                                selectedNurseIndex = index
+                                                nurseDropdownExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     // Fecha de registro
                     OutlinedTextField(
@@ -291,21 +480,25 @@ fun AddPatientDialog(
                     Button(
                         onClick = {
                             val age = ageText.toIntOrNull() ?: 0
-                            val doctorId = assignedDoctorIdText.toLongOrNull() ?: 0L
-                            val nurseId = assignedNurseIdText.toLongOrNull() ?: 0L
-                            val areaId = if (areas.isNotEmpty()) areas.getOrNull(selectedAreaIndex)?.id ?: 0L else 0L
+                            val doctorId = doctors.getOrNull(selectedDoctorIndex)?.id.orEmpty()
+                            val nurseId = nurses.getOrNull(selectedNurseIndex)?.id.orEmpty()
+                            val nurseName = nurses.getOrNull(selectedNurseIndex)?.name.orEmpty()
+                            val areaNombre = if (areas.isNotEmpty()) areas.getOrNull(selectedAreaIndex)?.name.orEmpty() else ""
+                            val estado = estadosActuales.getOrNull(selectedEstadoIndex).orEmpty()
                             val patient = Patient(
-                                id = 0L,
+                                id = "",
                                 name = name.trim(),
                                 lastName = lastName.trim(),
                                 bloodType = bloodType.trim(),
                                 symptoms = symptoms.trim(),
-                                currentState = currentState.trim(),
+                                currentState = estado,
                                 age = age,
                                 registrationDate = registrationDate.trim(),
-                                areaId = areaId,
+                                areaNombre = areaNombre,
+                                notaCondicion = notaCondicion.trim(),
                                 assignedDoctor = doctorId,
-                                assignedNurse = nurseId
+                                assignedNurse = nurseId,
+                                nombreEnfermero = nurseName
                             )
                             onSave(patient)
                         },

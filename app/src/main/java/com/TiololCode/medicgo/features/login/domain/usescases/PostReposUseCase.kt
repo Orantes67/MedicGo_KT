@@ -13,7 +13,7 @@ class PostLoginUseCase @Inject constructor(
     ): Result<LoginResult> {
         return try {
             if (licenseNumber.isBlank()) {
-                return Result.failure(Exception("El número de licencia no puede estar vacío"))
+                return Result.failure(Exception("El número de colegiado no puede estar vacío"))
             }
             if (password.isBlank()) {
                 return Result.failure(Exception("La contraseña no puede estar vacía"))

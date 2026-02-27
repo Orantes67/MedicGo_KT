@@ -1,7 +1,7 @@
 package com.TiololCode.medicgo.features.register.domain.entities
 
 data class RegisteredUser(
-    val id: Long,
+    val id: String,
     val name: String,
     val email: String,
     val licenseNumber: String,

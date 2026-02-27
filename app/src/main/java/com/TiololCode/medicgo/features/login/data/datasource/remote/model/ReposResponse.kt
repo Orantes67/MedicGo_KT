@@ -8,7 +8,7 @@ data class LoginRequest(
 )
 
 data class UserDto(
-    @SerializedName("id") val id: Long?,
+    @SerializedName("id") val id: String?,
     @SerializedName("name") val name: String?,
     @SerializedName("email") val email: String?,
     @SerializedName("license_number") val licenseNumber: String?,

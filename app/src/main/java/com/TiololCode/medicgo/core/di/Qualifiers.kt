@@ -17,3 +17,7 @@ annotation class AdministratorQualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class DoctorQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PatientApiRetrofit

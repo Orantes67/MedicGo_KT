@@ -45,7 +45,8 @@ fun AreaList(
         items(areas) { area ->
             AreaCard(
                 name = area.name,
-                patientCount = area.patientCount
+                patientCount = area.patientCount,
+                criticalCount = area.criticos
             )
         }
 

@@ -10,7 +10,7 @@ fun RegisterResponseDto.toDomain(): RegisterResult {
         token = token.orEmpty(),
         user = user?.let {
             RegisteredUser(
-                id = it.id ?: 0L,
+                id = it.id.orEmpty(),
                 name = it.name.orEmpty(),
                 email = it.email.orEmpty(),
                 licenseNumber = it.licenseNumber.orEmpty(),

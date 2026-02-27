@@ -2,7 +2,9 @@ package com.TiololCode.medicgo.features.admistrator.data.di
 
 import com.TiololCode.medicgo.core.di.AdministratorQualifier
 import com.TiololCode.medicgo.core.di.MedicGoRetrofit
+import com.TiololCode.medicgo.core.di.PatientApiRetrofit
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.api.AdminApi
+import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.api.PatientApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +21,12 @@ object AdminNetworkModule {
     @AdministratorQualifier
     fun provideAdminApi(@MedicGoRetrofit retrofit: Retrofit): AdminApi {
         return retrofit.create(AdminApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePatientApi(@PatientApiRetrofit retrofit: Retrofit): PatientApi {
+        return retrofit.create(PatientApi::class.java)
     }
 }
 

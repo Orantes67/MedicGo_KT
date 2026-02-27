@@ -3,10 +3,12 @@ package com.TiololCode.medicgo.features.admistrator.data.datasource.remote
 import com.TiololCode.medicgo.core.di.AdministratorQualifier
 import com.TiololCode.medicgo.core.security.TokenManager
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.api.AdminApi
+import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.api.PatientApi
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.mapper.toArea
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.mapper.toHealthProfessional
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.mapper.toMetric
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.model.AssignNurseRequestDto
+import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.model.AssignPatientRequestDto
 import com.TiololCode.medicgo.features.admistrator.data.datasource.remote.model.CreatePatientRequestDto
 import com.TiololCode.medicgo.features.admistrator.domain.entities.Area
 import com.TiololCode.medicgo.features.admistrator.domain.entities.HealthProfessional
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 class AdminRemoteDataSource @Inject constructor(
     @AdministratorQualifier private val adminApi: AdminApi,
+    private val patientApi: PatientApi,
     private val tokenManager: TokenManager
 ) {
 
@@ -49,27 +52,48 @@ class AdminRemoteDataSource @Inject constructor(
         }
     }
 
+    /**
+     * Paso 1 — POST /api/v1/pacientes  → crea el paciente y devuelve su id.
+     * Paso 2 — PATCH /api/v1/pacientes/:id/asignar → asigna doctor y/o enfermero.
+     */
     suspend fun addPatient(patient: Patient): Result<Patient> {
         return try {
-            val request = CreatePatientRequestDto(
-                name = patient.name,
-                lastName = patient.lastName,
-                bloodType = patient.bloodType,
-                symptoms = patient.symptoms,
-                currentState = patient.currentState,
-                age = patient.age,
-                areaId = patient.areaId,
-                assignedDoctor = patient.assignedDoctor,
-                assignedNurse = patient.assignedNurse
+            // ── Paso 1: crear paciente ──────────────────────────────────────
+            val createRequest = CreatePatientRequestDto(
+                nombre       = patient.name,
+                apellido     = patient.lastName,
+                edad         = patient.age,
+                areaNombre   = patient.areaNombre,
+                estadoActual = patient.currentState,
+                tipoSangre   = patient.bloodType,
+                fechaRegistro = patient.registrationDate,
+                notaCondicion = patient.notaCondicion.ifBlank { null },
+                sintomas      = patient.symptoms.ifBlank { null }
             )
-            adminApi.createPatient(request)
-            Result.success(patient)
+            val created = patientApi.createPatient(createRequest)
+            val patientId = created.id ?: created.mongoId
+                ?: return Result.failure(Exception("El servidor no devolvió el ID del paciente"))
+
+            // ── Paso 2: asignar doctor / enfermero (si se eligió alguno) ────
+            val hasDoctor = patient.assignedDoctor.isNotBlank()
+            val hasNurse  = patient.assignedNurse.isNotBlank()
+            if (hasDoctor || hasNurse) {
+                val assignRequest = AssignPatientRequestDto(
+                    doctorId      = patient.assignedDoctor.ifBlank { null },
+                    enfermeroId   = patient.assignedNurse.ifBlank { null },
+                    nombreEnfermero = patient.nombreEnfermero.ifBlank { null }
+                )
+                patientApi.assignPatient(patientId, assignRequest)
+            }
+
+            Result.success(patient.copy(id = patientId))
         } catch (e: Exception) {
+            android.util.Log.e("AdminRemoteDataSource", "Error adding patient: ${e.message}", e)
             Result.failure(e)
         }
     }
 
-    suspend fun assignNurse(nurseId: Long, doctorId: Long): Result<Unit> {
+    suspend fun assignNurse(nurseId: String, doctorId: String): Result<Unit> {
         return try {
             val request = AssignNurseRequestDto(nurseId, doctorId)
             adminApi.assignNurse(request)

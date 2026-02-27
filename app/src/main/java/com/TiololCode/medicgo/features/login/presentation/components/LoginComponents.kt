@@ -44,7 +44,7 @@ fun LicenseInputField(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = "Medical License Number",
+            text = "Número de Colegiado (ej: 12345678)",
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
             color = LabelColor
@@ -56,7 +56,7 @@ fun LicenseInputField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
-                    text = "Enter your license ID",
+                    text = "Ingresa tu número de colegiado",
                     color = PlaceholderColor,
                     fontSize = 14.sp
                 )
