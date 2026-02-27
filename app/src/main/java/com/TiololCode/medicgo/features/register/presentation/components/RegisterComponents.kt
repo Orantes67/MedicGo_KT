@@ -352,7 +352,7 @@ fun RoleDropdownField(
     onRoleSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val roles = listOf("doctor", "enfermero", "administrador")
+    val roles = listOf("doctor", "enfermero")
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = "Role",
