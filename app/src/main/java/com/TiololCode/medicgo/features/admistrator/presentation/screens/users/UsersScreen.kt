@@ -100,7 +100,9 @@ fun UsersScreen(viewModel: UsersViewModel = hiltViewModel()) {
                             ProfessionalCard(
                                 name = professional.name,
                                 profession = professional.profession,
-                                licenseNumber = professional.licenseNumber
+                                licenseNumber = professional.licenseNumber,
+                                email = professional.email,
+                                specialty = professional.specialty
                             )
                         }
                         item {
@@ -115,7 +117,9 @@ fun UsersScreen(viewModel: UsersViewModel = hiltViewModel()) {
                             ProfessionalCard(
                                 name = professional.name,
                                 profession = professional.profession,
-                                licenseNumber = professional.licenseNumber
+                                licenseNumber = professional.licenseNumber,
+                                email = professional.email,
+                                specialty = professional.specialty
                             )
                         }
                     }
@@ -156,7 +160,9 @@ fun SectionHeader(title: String, accentColor: Color) {
 fun ProfessionalCard(
     name: String,
     profession: String,
-    licenseNumber: String
+    licenseNumber: String,
+    email: String = "",
+    specialty: String = ""
 ) {
     Row(
         modifier = Modifier
@@ -183,16 +189,31 @@ fun ProfessionalCard(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = name,
+                text = name.ifEmpty { "Sin nombre" },
                 color = PrimaryText,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(
-                text = profession,
-                color = Color(0xFF888888),
-                fontSize = 13.sp
-            )
+            if (specialty.isNotEmpty()) {
+                Text(
+                    text = specialty,
+                    color = Color(0xFF2979FF),
+                    fontSize = 12.sp
+                )
+            } else {
+                Text(
+                    text = profession,
+                    color = Color(0xFF888888),
+                    fontSize = 13.sp
+                )
+            }
+            if (email.isNotEmpty()) {
+                Text(
+                    text = email,
+                    color = Color(0xFF888888),
+                    fontSize = 12.sp
+                )
+            }
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "Lic: $licenseNumber",

@@ -23,7 +23,9 @@ fun HealthProfessionalDto.toHealthProfessional(): HealthProfessional {
         id = id.orEmpty(),
         name = name.orEmpty(),
         profession = role.orEmpty(),
-        licenseNumber = licenseNumber.orEmpty()
+        licenseNumber = licenseNumber.orEmpty(),
+        email = email.orEmpty(),
+        specialty = specialty.orEmpty()
     )
 }
 
@@ -37,7 +39,7 @@ fun PatientDto.toPatient(): Patient {
         currentState = currentState.orEmpty(),
         age = age ?: 0,
         registrationDate = registrationDate.orEmpty(),
-        areaId = areaId.orEmpty(),
+        areaNombre = areaId.orEmpty(),
         assignedDoctor = assignedDoctor.orEmpty(),
         assignedNurse = assignedNurse.orEmpty()
     )

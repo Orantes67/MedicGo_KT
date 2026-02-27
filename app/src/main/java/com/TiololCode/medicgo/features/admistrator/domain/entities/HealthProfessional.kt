@@ -4,6 +4,8 @@ data class HealthProfessional(
     val id: String,
     val name: String,
     val profession: String,
-    val licenseNumber: String
+    val licenseNumber: String,
+    val email: String = "",
+    val specialty: String = ""
 )
 
